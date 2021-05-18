@@ -34,17 +34,15 @@ export default {
     };
   },
   methods: {
-    reset(email) {
+    reset(FormData) {
       this.$store
-        .dispatch("resetPassword", email)
+        .dispatch("resetPassword", FormData)
         .then(() => {
-          // this.$router.push("/");
-          console.log('OK')
+          this.$router.push("/admin");
         })
         .catch((err) => {
-          // this.isError = true;
-          // this.textError = err;
-          console.log(err)
+          this.isError = true;
+          this.textError = err;
         });
     },
   },
