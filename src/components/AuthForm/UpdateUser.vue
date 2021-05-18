@@ -127,11 +127,7 @@ export default {
 
       const formData = {
         name: this.name,
-        email: this.email,
-        date: this.date,
-        month: this.month,
-        year: this.year,
-        country: this.country
+        email: this.email
       };
 
       this.$emit("submit", formData);
@@ -146,7 +142,6 @@ export default {
     for (let i = new Date().getFullYear(); i >= 1920; i--) {
       this.years.push(i);
     }
-    console.log(1)
 
     this.name = this.user.name
     this.email = this.user.email

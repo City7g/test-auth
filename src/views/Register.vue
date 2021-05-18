@@ -34,14 +34,16 @@ export default {
     };
   },
   methods: {
-    async submit(formData) {
-      console.log(formData)
-      try {
-        await this.$store.dispatch("createUser", formData);
-        this.$router.push('/admin')
-      } catch (err) {
-        console.log(err)
-      }
+    submit(formData) {
+      this.$store
+        .dispatch("createUser", formData)
+        .then(() => {
+          this.$router.push({name: 'Admin'});
+        })
+        .catch((err) => {
+          this.isError = true;
+          this.textError = err;
+        });
     },
   },
 };

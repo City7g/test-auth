@@ -23,15 +23,19 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn to="/register" text>
+      <v-btn text to="/admin">
+        <span>{{ userName }}</span>
+      </v-btn>
+
+      <v-btn v-if="!userName" to="/register" text>
         <span>Register</span>
       </v-btn>
 
-      <v-btn to="/login" text class="ml-2">
+      <v-btn v-if="!userName" to="/login" text class="ml-2">
         <span>Login</span>
       </v-btn>
 
-      <v-btn @click="logout" text class="ml-2">
+      <v-btn v-if="userName" @click="logout" text class="ml-2">
         <span>Exit</span>
       </v-btn>
     </v-app-bar>
@@ -46,11 +50,21 @@
 export default {
   name: "App",
 
-  methods: {
-    async logout() {
-      await this.$store.dispatch("logout");
-      this.$router.push("/");
+  computed: {
+    userName() {
+      return this.$store.getters.user.name;
     },
-  }
+  },
+
+  methods: {
+    logout() {
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/login");
+      });
+    },
+    token() {
+      return this.$store.state.token
+    }
+  },
 };
 </script>

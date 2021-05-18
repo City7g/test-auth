@@ -37,22 +37,21 @@ export default {
   },
   methods: {
     async submit(formData) {
-      let data = {
+
+      console.log(formData)
+
+      const data = {
         ...formData,
         id: this.$route.params.id
       }
-      try {
-        console.log(data)
-        await this.$store.dispatch("updateUser", data);
-        this.$router.push('/admin')
-      } catch (err) {
-        console.log(err)
-      }
+
+      this.$store.dispatch("updateUser", data).then(() => {
+        this.$router.push("/admin");
+      });
     },
   },
   async mounted() {
-    this.user = await this.$store.dispatch('fetchUser', this.$route.params.id)
-    console.log(this.user)
-  }
+    this.user = await this.$store.dispatch("fetchUser", this.$route.params.id);
+  },
 };
 </script>

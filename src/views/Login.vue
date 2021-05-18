@@ -34,14 +34,16 @@ export default {
     };
   },
   methods: {
-    async submit(formData) {
-      try {
-        await this.$store.dispatch("login", formData);
-        this.$router.push('/')
-      } catch (err) {
-        this.isError = true
-        this.textError = err
-      }
+    submit(formData) {
+      this.$store
+        .dispatch("login", formData)
+        .then(() => {
+          this.$router.push({name: "Admin"});
+        })
+        .catch((err) => {
+          this.isError = true;
+          this.textError = err;
+        });
     },
   },
 };

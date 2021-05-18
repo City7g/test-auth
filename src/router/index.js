@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import firebase from "firebase/app"
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -19,28 +19,42 @@ const routes = [
   {
     path: "/register",
     name: "Register",
+    meta: {
+      notAuth: true,
+    },
     component: () => import("../views/Register.vue"),
   },
   {
     path: "/login",
     name: "Login",
+    meta: {
+      notAuth: true,
+    },
     component: () => import("../views/Login.vue"),
   },
   {
     path: "/reset",
     name: "Reset",
+    meta: {
+      notAuth: true,
+    },
     component: () => import("../views/Reset.vue"),
   },
   {
     path: "/admin",
     name: "Admin",
-    meta: {auth: true},
+    meta: {
+      requiresAuth: true,
+    },
     component: () => import("../views/Admin.vue"),
   },
   {
     path: "/update-user/:id",
     name: "UpdateUser",
-    meta: {auth: true},
+    meta: { auth: true },
+    meta: {
+      requiresAuth: true,
+    },
     component: () => import("../views/UpdateUser.vue"),
   },
   {
@@ -50,8 +64,8 @@ const routes = [
   },
   {
     path: "*",
-    redirect: "/404"
-  }
+    redirect: "/404",
+  },
 ];
 
 const router = new VueRouter({
@@ -61,16 +75,21 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const currentUser = firebase.auth().currentUser
+  const requireAuth = to.matched.some(record => record.meta.requiresAuth);
+  const notAuth = to.matched.some(record => record.meta.notAuth);
 
-  console.log(currentUser)
-
-  const requireAuth = to.matched.some(record => record.meta.auth)
-  if(requireAuth && !currentUser) {
-    next('/login')
+  if (requireAuth && !store.getters.isLoggedIn) {
+    next("/login");
+    console.log(1);
   } else {
-    next()
+    next();
   }
-})
+
+  if (notAuth && store.getters.isLoggedIn) {
+    next("/admin");
+  } else {
+    next();
+  }
+});
 
 export default router;
